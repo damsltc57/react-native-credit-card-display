@@ -25,81 +25,80 @@ export default function App() {
       >
         <View style={styles.cardContainer}>
           <CreditCardDisplay
-            number={4242424242424242}
+            number={4242}
             cvc={123}
             expiration="06/21"
-            name="John J. Doe"
+            brand={'mastercard'}
           />
         </View>
         <View style={styles.cardContainer}>
           <CreditCardDisplay
-            number={'3088 0000 0000 0009'}
+            number={'4242'}
             cvc={123}
             expiration="06/21"
-            name="John J. Doe"
-            since={2004}
             height={126}
             width={200}
             fontSize={12}
             friction={10}
             flipped={card2Flipped}
+            brand={'mastercard'}
           />
           <Button onPress={() => setCard2Flipped(!card2Flipped)} title="Flip" />
         </View>
         <View style={styles.cardContainer}>
           <CreditCardDisplay
-            number={4026424242424242}
+            number={4242}
             cvc={123}
             expiration="06/21"
-            name="John J. Doe"
+            brand={'mastercard'}
           />
         </View>
         <View style={styles.cardContainer}>
           <CreditCardDisplay
-            number={'3400 0000 0000 009'}
+            number={'4242'}
             cvc={123}
             expiration="06/21"
-            name="John J. Doe"
+            brand={'visa'}
           />
         </View>
         <View style={styles.cardContainer}>
           <CreditCardDisplay
-            number={5018424242424242}
+            number={4242}
             cvc={123}
             expiration="06/21"
-            name="John J. Doe"
+            brand={'visa'}
           />
         </View>
         <View style={styles.cardContainer}>
           <CreditCardDisplay
-            number={5223424242424242}
+            number={4242}
             cvc={123}
             expiration="06/21"
-            name="John J. Doe"
+            brand={'visa'}
           />
         </View>
         <View style={styles.cardContainer}>
           <CreditCardDisplay
-            number={6042424242424242}
+            number={4242}
             cvc={123}
             expiration="06/21"
-            name="John J. Doe"
+            brand={'visa'}
           />
         </View>
         <View style={styles.cardContainer}>
           <CreditCardDisplay
-            number={6242424242424242}
+            number={4242}
             cvc={123}
             expiration="06/21"
-            name="John J. Doe"
+            brand={'visa'}
           />
         </View>
         <View style={styles.cardContainer}>
           <CreditCardDisplay
-            number={3542424242424242}
+            number={4242}
             cvc={123}
             expiration="06/21"
-            name="John J. Doe"
+            brand={'visa'}
           />
         </View>
       </ScrollView>

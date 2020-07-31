@@ -1,5 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground, Image } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  Image,
+  Platform,
+} from 'react-native';
 
 import FlipCard from 'react-native-flip-card';
 import creditcardutils from 'creditcardutils';
@@ -8,17 +15,11 @@ type Props = {
   /** Number to display on the front of the card */
   number: number | string;
 
-  /** Name to display on the front of the card */
-  name: string;
-
   /** cvc to display on the back of the card */
   cvc: number | string;
 
   /** Expiration Date to display on the front of the card. displayed as given, so it should be formatted */
   expiration: string;
-
-  /** Year for `Customer Since` */
-  since?: number | string;
 
   /** Additional styles to apply to the front of the card */
   frontStyles?: object;
@@ -43,6 +44,9 @@ type Props = {
 
   /** Is the card flipped? Use this to programmatically `flip` the card. */
   flipped?: boolean;
+
+  /** Brand of the  card ['amex', 'visa', ...] */
+  brand: string;
 } & typeof defaultProps;
 
 const defaultProps = {
@@ -51,12 +55,13 @@ const defaultProps = {
   fontSize: 20,
   friction: 6,
   flipped: false,
+  brand: 'visa',
 };
 
 const CreditCardDisplay = (props: Props) => {
   let cardTypeIcon = null;
 
-  switch (creditcardutils.parseCardType(props.number as string)) {
+  switch (props.brand) {
     case 'amex':
       cardTypeIcon = {
         uri:
@@ -126,90 +131,61 @@ const CreditCardDisplay = (props: Props) => {
             <ImageBackground
               source={require('./assets/images/card-front.png')}
               style={styles.imageBackground}
-              imageStyle={{ borderRadius: 15 }}
+              imageStyle={{ borderRadius: 5 }}
             >
               <View style={styles.imageContainer}>
-                <View style={{ height: '50%' }} />
-
-                <Text
-                  style={{
-                    fontSize: props.fontSize,
-                    alignSelf: 'center',
-                    color: '#222',
-                  }}
-                >
-                  {creditcardutils.formatCardNumber(String(props.number))}
-                </Text>
-
-                <View style={{ flexDirection: 'row' }}>
-                  <View style={styles.groupContainer}>
-                    {props.since && (
-                      <>
-                        <Text
-                          style={{
-                            ...styles.groupLabel,
-                            fontSize: props.fontSize * 0.7,
-                            textAlign: 'right',
-                          }}
-                        >
-                          CUSTOMER{'\n'}SINCE
-                        </Text>
-
-                        <Text
-                          style={{
-                            fontSize: props.fontSize * 0.7,
-                            color: '#222',
-                          }}
-                        >
-                          {props.since}
-                        </Text>
-                      </>
-                    )}
-                  </View>
-
-                  <View style={styles.groupContainer}>
-                    {props.expiration && (
-                      <>
-                        <Text
-                          style={{
-                            ...styles.groupLabel,
-                            fontSize: props.fontSize * 0.7,
-                            textAlign: 'center',
-                          }}
-                        >
-                          VALID{'\n'}THRU
-                        </Text>
-
-                        <Text
-                          style={{
-                            fontSize: props.fontSize * 0.7,
-                            color: '#222',
-                          }}
-                        >
-                          {creditcardutils.formatCardExpiry(props.expiration)}
-                        </Text>
-                      </>
-                    )}
-                  </View>
-                  <View style={styles.cardImageContainer}>
-                    {cardTypeIcon && (
-                      <Image
-                        source={cardTypeIcon}
-                        style={styles.cardImage}
-                        resizeMode="contain"
-                      />
-                    )}
-                  </View>
+                <View style={styles.cardImageContainer}>
+                  {cardTypeIcon && (
+                    <Image
+                      source={cardTypeIcon}
+                      style={styles.cardImage}
+                      resizeMode="contain"
+                    />
+                  )}
                 </View>
-                <Text
-                  style={{
-                    fontSize: props.fontSize,
-                    marginTop: 5,
-                    color: '#222',
-                  }}
-                >
-                  {props.name}
-                </Text>
+                <View style={{ height: '30%' }} />
+                <View style={{ flexDirection: 'row' }}>
+                  <Text
+                    style={{
+                      fontSize: props.fontSize,
+                      alignSelf: 'flex-start',
+                      color: '#ffffff',
+                      marginLeft: '6%',
+                      fontFamily: Platform.select({
+                        ios: 'Courier',
+                        android: 'monospace',
+                      }),
+                    }}
+                  >
+                    {'···· ···· ···· ' +
+                      creditcardutils.formatCardNumber(String(props.number))}
+                  </Text>
+                </View>
+                <View style={{ height: '25%' }} />
+                <View style={styles.expiry}>
+                  <Text
+                    style={{
+                      fontSize: props.fontSize * 0.6,
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      fontFamily: Platform.select({
+                        ios: 'Courier',
+                        android: 'monospace',
+                      }),
+                    }}
+                  >
+                    MONTH/YEAR
+                  </Text>
+
+                  <Text
+                    style={{
+                      fontSize: props.fontSize * 0.7,
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      marginRight: '5%',
+                    }}
+                  >
+                    {creditcardutils.formatCardExpiry(props.expiration)}
+                  </Text>
+                </View>
               </View>
             </ImageBackground>
           </View>
@@ -222,12 +198,18 @@ const CreditCardDisplay = (props: Props) => {
               style={styles.imageBackground}
               imageStyle={{ borderRadius: 15 }}
             >
-              <View style={{ height: '45%' }} />
+              <View style={{ height: '42%' }} />
 
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ width: '82%' }} />
 
-                <Text style={{ fontSize: props.fontSize, alignSelf: 'center' }}>
+                <Text
+                  style={{
+                    fontSize: props.fontSize,
+                    alignSelf: 'center',
+                    color: 'white',
+                  }}
+                >
                   {props.cvc}
                 </Text>
               </View>
@@ -254,21 +236,26 @@ const styles = StyleSheet.create({
   groupLabel: {
     color: '#333',
     textAlignVertical: 'center',
-    marginRight: '2%',
   },
   imageContainer: {
-    padding: 15,
+    padding: 10,
   },
   cardImageContainer: {
     justifyContent: 'center',
-    height: 27,
-    width: 27 * (125 / 80),
-    alignItems: 'center',
+    height: 20,
+    alignItems: 'flex-end',
   },
   cardImage: {
     height: 25,
     width: 25 * (125 / 80),
     backgroundColor: 'white',
+    borderRadius: 5,
+  },
+  expiry: {
+    fontSize: 16,
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    marginRight: 10,
   },
 });
 
